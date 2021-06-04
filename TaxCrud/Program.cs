@@ -18,6 +18,12 @@ namespace TaxCrud
     {
         readonly Dictionary<int, Action> Actions = new();
 
+        readonly string x = @"CREATE TABLE Users (
+	Id INTEGER PRIMARY KEY,
+	FirstName TEXT NOT NULL,
+	LastName TEXT NOT NULL
+);";
+
         public void Run()
         {
             Console.WriteLine("Tax Simulator 2021");
@@ -25,8 +31,22 @@ namespace TaxCrud
             FillDictionary();
 
             var connection = Connection.Get();
+            connection.Open();
 
-            // make tables...
+            var y = connection.CreateCommand();
+            y.CommandText = x;
+            y.ExecuteNonQuery();
+
+            var z = connection.CreateCommand();
+            z.CommandText = @"INSERT INTO Users (Id, FirstName, LastName)
+VALUES ('1','John','Saint-Simons')";
+            z.ExecuteNonQuery();
+
+            var queryResult = connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
+            foreach (var person in queryResult)
+            {
+                Console.WriteLine(person);
+            }
 
             connection.Close();
 
@@ -58,10 +78,10 @@ namespace TaxCrud
         private void ViewUsers()
         {
             using var connection = Connection.Get();
+            var queryResult = connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
 
             try
             {
-                var queryResult = connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM dbo.[Users]");
 
                 foreach (var person in queryResult)
                 {
@@ -86,15 +106,18 @@ namespace TaxCrud
         public int Id { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+
+        public override string ToString()
+        {
+            return FirstName + " " + LastName;
+        }
     }
 
     class Connection
     {
         public static SqliteConnection Get()
         {
-            var connection = new SqliteConnection("Data Source=:memory:");
-            connection.Open();
-            return connection;
+            return new SqliteConnection("Data Source=:memory:");
         }
     }
 }
