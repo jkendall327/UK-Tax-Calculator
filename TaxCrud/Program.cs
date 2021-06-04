@@ -1,7 +1,5 @@
-﻿using Dapper;
-using Microsoft.Data.Sqlite;
-using System;
-using System.Linq;
+﻿using System;
+using System.Collections.Generic;
 
 namespace TaxCrud
 {
@@ -11,56 +9,44 @@ namespace TaxCrud
 
     class Program
     {
-        static void Main(string[] args)
-        {
-            Console.WriteLine("Hello World!");
-
-            var bs = new DatabaseBootstrap(new DatabaseConfig() { Name = "test" });
-            bs.Setup();
-            bs.Read();
-        }
+        static void Main(string[] args) => new App().Run();
     }
 
-    public interface IDatabaseBootstrap
+    class App
     {
-        void Setup();
-    }
+        readonly Dictionary<int, Action> Actions = new();
 
-    public class DatabaseConfig
-    {
-        public string Name { get; set; }
-    }
-
-    public class DatabaseBootstrap : IDatabaseBootstrap
-    {
-        private readonly DatabaseConfig databaseConfig;
-
-        public DatabaseBootstrap(DatabaseConfig databaseConfig)
+        public void Run()
         {
-            this.databaseConfig = databaseConfig;
+            Console.WriteLine("Tax Simulator 2021");
+
+            FillDictionary();
+
+            while (true)
+            {
+                Console.Write("> ");
+
+                var response = Console.ReadLine();
+
+                // parse response
+                if (int.TryParse(response, out int result) == false) { Actions[0].Invoke(); continue; }
+
+                // match response with action
+                if (Actions.TryGetValue(result, out var action) == false) { Actions[0].Invoke(); continue; }
+
+                action.Invoke();
+            }
         }
 
-        readonly SqliteConnection x;
-
-        public void Setup()
+        private void FillDictionary()
         {
-            using var x = new SqliteConnection(databaseConfig.Name);
-
-            var table = x.Query<string>("SELECT name FROM sqlite_master WHERE type='table' AND name = 'Product';");
-            var tableName = table.FirstOrDefault();
-            if (!string.IsNullOrEmpty(tableName) && tableName == "Product")
-                return;
-
-            x.Execute("Create Table Product (" +
-                "Name VARCHAR(100) NOT NULL," +
-                "Description VARCHAR(1000) NULL);");
+            Actions.Add(0, InvalidAction);
+            Actions.Add(1, CreateUser);
+            Actions.Add(2, DeleteUser);
         }
 
-        internal void Read()
-        {
-            var table = x.Query<string>("SELECT name FROM sqlite_master WHERE type='table' AND name = 'Product';");
-            var tableName = table.FirstOrDefault();
-            Console.WriteLine(tableName);
-        }
+        private void InvalidAction() => Console.WriteLine("Invalid response. Please try again.");
+        private void CreateUser() => Console.WriteLine("Added user");
+        private void DeleteUser() => Console.WriteLine("Deleted user");
     }
 }
