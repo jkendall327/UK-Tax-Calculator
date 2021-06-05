@@ -18,37 +18,17 @@ namespace TaxCrud
     {
         readonly Dictionary<int, Action> Actions = new();
 
-        readonly string x = @"CREATE TABLE Users (
-	Id INTEGER PRIMARY KEY,
-	FirstName TEXT NOT NULL,
-	LastName TEXT NOT NULL
-);";
-
         public void Run()
         {
             Console.WriteLine("Tax Simulator 2021");
 
             FillDictionary();
 
-            var connection = Connection.Get();
-            connection.Open();
-
-            var y = connection.CreateCommand();
-            y.CommandText = x;
-            y.ExecuteNonQuery();
-
-            var z = connection.CreateCommand();
-            z.CommandText = @"INSERT INTO Users (Id, FirstName, LastName)
-VALUES ('1','John','Saint-Simons')";
-            z.ExecuteNonQuery();
-
-            var queryResult = connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
-            foreach (var person in queryResult)
+            foreach (var item in Actions)
             {
-                Console.WriteLine(person);
+                Console.Write(item.Key + ") ");
+                Console.WriteLine(item.Value.Method.ToString());
             }
-
-            connection.Close();
 
             while (true)
             {
@@ -78,26 +58,43 @@ VALUES ('1','John','Saint-Simons')";
         private void ViewUsers()
         {
             using var connection = Connection.Get();
-            var queryResult = connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
 
             try
             {
+                var queryResult = Connection.GetAllUsers();
 
                 foreach (var person in queryResult)
                 {
                     Console.WriteLine(person);
                 }
             }
-            catch (SqliteException)
+            catch (SqliteException ex)
             {
-                Console.WriteLine("No users found");
+                Console.WriteLine($"Database error occured: {ex.Message}");
             }
         }
 
         private void CreateUser()
         {
-            using var connection = Connection.Get();
+            Console.Write("Enter first name: ");
+            var fname = Console.ReadLine();
 
+            Console.Write("Enter last name: ");
+            var lname = Console.ReadLine();
+
+            try
+            {
+                Connection.AddUser(fname, lname);
+                Console.WriteLine($"New user {fname} {lname} added succesfully.");
+            }
+            catch (SqliteException ex)
+            {
+                Console.WriteLine($"Database error occured: {ex.Message}");
+            }
+            finally
+            {
+                ViewUsers();
+            }
         }
     }
 
@@ -117,7 +114,19 @@ VALUES ('1','John','Saint-Simons')";
     {
         public static SqliteConnection Get()
         {
-            return new SqliteConnection("Data Source=:memory:");
+            return new SqliteConnection(@"Data Source=mydb.db;");
+        }
+
+        public static void AddUser(string firstName, string lastName)
+        {
+            using var connection = Get();
+            connection.Execute("INSERT INTO Users (FirstName, LastName) VALUES (@fname,@lname)", new { fname = firstName, lname = lastName });
+        }
+
+        public static IEnumerable<Person> GetAllUsers()
+        {
+            using var connection = Get();
+            return connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
         }
     }
 }
