@@ -18,6 +18,8 @@ namespace TaxCrud
 
     class App
     {
+        public Connection Connection { get; set; } = new();
+
         public void Run()
         {
             Console.WriteLine("Tax Simulator 2021");
