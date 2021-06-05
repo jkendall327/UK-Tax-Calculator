@@ -1,5 +1,6 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TaxCrudTests")]
@@ -21,6 +22,8 @@ namespace TaxCrud
         {
             Console.WriteLine("Tax Simulator 2021");
 
+            Connection.Initialize();
+
             var mainConsole = new EasyConsole.Menu()
                 .Add("View Users", ViewUsers)
                 .Add("Add User", CreateUser);
@@ -37,6 +40,11 @@ namespace TaxCrud
             try
             {
                 var queryResult = Connection.GetAllUsers();
+
+                if (!queryResult.Any())
+                {
+                    Console.WriteLine("No users!");
+                }
 
                 foreach (var person in queryResult)
                 {
