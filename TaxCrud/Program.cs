@@ -1,7 +1,5 @@
-﻿using Dapper;
-using Microsoft.Data.Sqlite;
+﻿using Microsoft.Data.Sqlite;
 using System;
-using System.Collections.Generic;
 
 namespace TaxCrud
 {
@@ -11,54 +9,28 @@ namespace TaxCrud
 
     class Program
     {
-        static void Main(string[] args) => new App().Run();
+        static void Main() => new App().Run();
     }
 
     class App
     {
-        readonly Dictionary<int, Action> Actions = new();
-
         public void Run()
         {
             Console.WriteLine("Tax Simulator 2021");
 
-            FillDictionary();
-
-            foreach (var item in Actions)
-            {
-                Console.Write(item.Key + ") ");
-                Console.WriteLine(item.Value.Method.ToString());
-            }
+            var mainConsole = new EasyConsole.Menu()
+                .Add("View Users", ViewUsers)
+                .Add("Add User", CreateUser);
 
             while (true)
             {
-                Console.Write("> ");
-
-                var response = Console.ReadLine();
-
-                // parse response
-                if (int.TryParse(response, out int result) == false) { Actions[0].Invoke(); continue; }
-
-                // match response with action
-                if (Actions.TryGetValue(result, out var action) == false) { Actions[0].Invoke(); continue; }
-
-                action.Invoke();
+                mainConsole.Display();
+                Console.WriteLine(Environment.NewLine);
             }
         }
 
-        private void FillDictionary()
-        {
-            Actions.Add(0, InvalidAction);
-            Actions.Add(1, ViewUsers);
-            Actions.Add(2, CreateUser);
-        }
-
-        private void InvalidAction() => Console.WriteLine("Invalid response. Please try again.");
-
         private void ViewUsers()
         {
-            using var connection = Connection.Get();
-
             try
             {
                 var queryResult = Connection.GetAllUsers();
@@ -76,11 +48,8 @@ namespace TaxCrud
 
         private void CreateUser()
         {
-            Console.Write("Enter first name: ");
-            var fname = Console.ReadLine();
-
-            Console.Write("Enter last name: ");
-            var lname = Console.ReadLine();
+            var fname = Prompt("Enter first name: ");
+            var lname = Prompt("Enter last name: ");
 
             try
             {
@@ -96,37 +65,11 @@ namespace TaxCrud
                 ViewUsers();
             }
         }
-    }
 
-    public class Person
-    {
-        public int Id { get; set; }
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-
-        public override string ToString()
+        private string Prompt(string query)
         {
-            return FirstName + " " + LastName;
-        }
-    }
-
-    class Connection
-    {
-        public static SqliteConnection Get()
-        {
-            return new SqliteConnection(@"Data Source=mydb.db;");
-        }
-
-        public static void AddUser(string firstName, string lastName)
-        {
-            using var connection = Get();
-            connection.Execute("INSERT INTO Users (FirstName, LastName) VALUES (@fname,@lname)", new { fname = firstName, lname = lastName });
-        }
-
-        public static IEnumerable<Person> GetAllUsers()
-        {
-            using var connection = Get();
-            return connection.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
+            Console.Write(query);
+            return Console.ReadLine();
         }
     }
 }
