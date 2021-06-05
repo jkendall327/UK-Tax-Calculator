@@ -1,5 +1,8 @@
 ﻿using Microsoft.Data.Sqlite;
 using System;
+using System.Runtime.CompilerServices;
+
+[assembly: InternalsVisibleTo("TaxCrudTests")]
 
 namespace TaxCrud
 {

@@ -4,7 +4,7 @@ using System.Collections.Generic;
 
 namespace TaxCrud
 {
-    class Connection
+    internal class Connection
     {
         public static SqliteConnection Get()
         {
