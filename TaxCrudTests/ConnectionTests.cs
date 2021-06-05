@@ -9,10 +9,11 @@ namespace TaxCrudTests
         [Fact]
         public void ViewUsers()
         {
-            var Connection = new Connection("Data Source=:memory:;");
-            Connection.AddUser("Testman", "Test");
+            var conn = new Connection("Data Source=:memory:;");
+            conn.Initialize();
+            conn.AddUser("Testman", "Test");
 
-            Assert.Equal("Testman Test", Connection.GetAllUsers().First().ToString());
+            Assert.Equal("Testman Test", conn.GetAllUsers().First().ToString());
         }
     }
 }
