@@ -23,7 +23,7 @@ namespace TaxCrudTests
             Connection.AddUser("John", "Smith");
             var results = Connection.GetAllUsers();
 
-            Assert.Equal("John Smith", results.First().ToString());
+            Assert.Equal("John Smith", results.First().Name);
         }
 
         [Fact]
@@ -41,9 +41,9 @@ namespace TaxCrudTests
         {
             Connection.AddUser("John", "Smith");
 
-            var JohnSmith = Connection.GetByName("John Smith");
+            var john = Connection.GetAllUsers().First();
 
-            Connection.DeleteUser(JohnSmith.Id);
+            Connection.DeleteUser(john.Id);
 
             Assert.Empty(Connection.GetAllUsers());
         }

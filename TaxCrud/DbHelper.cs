@@ -1,7 +1,6 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
-using System.Linq;
 
 namespace TaxCrud
 {
@@ -29,11 +28,9 @@ namespace TaxCrud
             return Connection?.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users]");
         }
 
-        internal Person GetByName(string name)
+        internal IEnumerable<Person> GetByName(string firstName, string lastName)
         {
-            string[] names = name.Split(' ');
-            var result = Connection?.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users] WHERE FirstName = @fname AND LastName = @lname", new { fname = names[0], lname = names[1] }).First();
-            return result;
+            return Connection?.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users] WHERE FirstName = @fname AND LastName = @lname", new { fname = firstName, lname = lastName });
         }
 
         internal void DeleteUser(object id)

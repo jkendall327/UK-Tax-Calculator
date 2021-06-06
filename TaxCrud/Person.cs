@@ -8,7 +8,9 @@
 
         public override string ToString()
         {
-            return FirstName + " " + LastName;
+            return $"[{Id}] {FirstName} {LastName}";
         }
+
+        public string Name => FirstName + " " + LastName;
     }
 }

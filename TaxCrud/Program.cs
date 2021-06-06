@@ -29,6 +29,7 @@ namespace TaxCrud
             var mainConsole = new EasyConsole.Menu()
                 .Add("View Users", ViewUsers)
                 .Add("Add User", CreateUser)
+                .Add("Search by name", SearchByName)
                 .Add("Clear Database", ClearDatabase);
 
             while (true)
@@ -77,6 +78,25 @@ namespace TaxCrud
             finally
             {
                 ViewUsers();
+            }
+        }
+
+        private void SearchByName()
+        {
+            var fname = Prompt("Input first name: ");
+            var lname = Prompt("Input last name: ");
+
+            var results = Connection.GetByName(fname, lname);
+
+            if (!results.Any())
+            {
+                Console.WriteLine("No users by that name found.");
+                return;
+            }
+
+            foreach (var person in results)
+            {
+                Console.WriteLine(person.ToString());
             }
         }
 
