@@ -40,5 +40,11 @@ namespace TaxCrud
         {
             Connection?.Execute("DELETE FROM Users WHERE Id = @uid", new { uid = id });
         }
+
+        internal void ResetDatabase()
+        {
+            Connection?.Execute("DROP TABLE [Users];");
+            Initialize();
+        }
     }
 }

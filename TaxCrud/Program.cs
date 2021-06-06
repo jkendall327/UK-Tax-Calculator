@@ -28,7 +28,8 @@ namespace TaxCrud
 
             var mainConsole = new EasyConsole.Menu()
                 .Add("View Users", ViewUsers)
-                .Add("Add User", CreateUser);
+                .Add("Add User", CreateUser)
+                .Add("Clear Database", ClearDatabase);
 
             while (true)
             {
@@ -77,6 +78,21 @@ namespace TaxCrud
             {
                 ViewUsers();
             }
+        }
+
+        private void ClearDatabase()
+        {
+            Console.WriteLine("This will wipe all data, including users and financial transactions. Are you sure?");
+
+            var yesOrNo = new EasyConsole.Menu()
+                .Add("Yes, delete everything", () =>
+                {
+                    Connection.ResetDatabase();
+                    Console.WriteLine("Database reset.");
+                })
+                .Add("No, keep my data", () => { Console.WriteLine("Aborting."); });
+
+            yesOrNo.Display();
         }
 
         private string Prompt(string query)

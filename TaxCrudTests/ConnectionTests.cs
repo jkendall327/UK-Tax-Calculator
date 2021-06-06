@@ -47,5 +47,18 @@ namespace TaxCrudTests
 
             Assert.Empty(Connection.GetAllUsers());
         }
+
+        [Fact]
+        public void CanResetDatabase()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+
+            // act
+            Connection.ResetDatabase();
+
+            // assert
+            Assert.Empty(Connection.GetAllUsers());
+        }
     }
 }
