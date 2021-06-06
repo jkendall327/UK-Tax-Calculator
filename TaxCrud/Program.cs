@@ -31,7 +31,8 @@ namespace TaxCrud
                 .Add("Add User", CreateUser)
                 .Add("Delete User", DeleteUser)
                 .Add("Search by name", SearchByName)
-                .Add("Clear Database", ClearDatabase);
+                .Add("Clear Database", ClearDatabase)
+                .Add("Exit", () => Environment.Exit(0));
 
             while (true)
             {
