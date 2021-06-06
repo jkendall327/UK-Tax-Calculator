@@ -30,10 +30,10 @@ namespace TaxCrud
 
         internal IEnumerable<Person> GetByName(string firstName, string lastName)
         {
-            return Connection?.Query<Person>("SELECT [Id], [FirstName],[LastName] FROM [Users] WHERE FirstName = @fname AND LastName = @lname", new { fname = firstName, lname = lastName });
+            return Connection?.Query<Person>("SELECT [Id], [FirstName], [LastName] FROM [Users] WHERE FirstName = @fname AND LastName = @lname", new { fname = firstName, lname = lastName });
         }
 
-        internal void DeleteUser(object id)
+        internal void DeleteUser(int id)
         {
             Connection?.Execute("DELETE FROM Users WHERE Id = @uid", new { uid = id });
         }
@@ -42,6 +42,11 @@ namespace TaxCrud
         {
             Connection?.Execute("DROP TABLE [Users];");
             Initialize();
+        }
+
+        internal IEnumerable<Person> GetByID(int result)
+        {
+            return Connection.Query<Person>("SELECT [Id], [FirstName], [LastName] FROM [Users] WHERE Id = @uid", new { uid = result });
         }
     }
 }

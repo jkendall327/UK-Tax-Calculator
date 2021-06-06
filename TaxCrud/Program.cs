@@ -29,6 +29,7 @@ namespace TaxCrud
             var mainConsole = new EasyConsole.Menu()
                 .Add("View Users", ViewUsers)
                 .Add("Add User", CreateUser)
+                .Add("Delete User", DeleteUser)
                 .Add("Search by name", SearchByName)
                 .Add("Clear Database", ClearDatabase);
 
@@ -79,6 +80,37 @@ namespace TaxCrud
             {
                 ViewUsers();
             }
+        }
+
+        private void DeleteUser()
+        {
+            Console.WriteLine("Provide the ID of the user to delete.");
+
+            if (!int.TryParse(Console.ReadLine(), out int result))
+            {
+                Console.WriteLine("Invalid ID. Please try again.");
+                return;
+            }
+
+            var user = Connection.GetByID(result).FirstOrDefault();
+
+            if (user is null)
+            {
+                Console.WriteLine("No user with that ID found. Returning.");
+                return;
+            }
+
+            Console.WriteLine($"This will delete the user {user.Name}. Continue?");
+
+            var yesOrNo = new EasyConsole.Menu()
+                .Add($"Yes, delete {user.Name} permanently", () =>
+                {
+                    Connection.DeleteUser(result);
+                    Console.WriteLine("User deleted.");
+                })
+                .Add("No, do not delete", () => Console.WriteLine("Aborting."));
+
+            yesOrNo.Display();
         }
 
         private void SearchByName()

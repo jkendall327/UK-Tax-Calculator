@@ -60,5 +60,24 @@ namespace TaxCrudTests
             // assert
             Assert.Empty(Connection.GetAllUsers());
         }
+
+
+        [Fact]
+        public void CanGetByID()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+            Connection.AddUser("Jane", "Doe");
+            Connection.AddUser("Malcolm", "Gladwell");
+
+            var expected = new Person() { FirstName = "Jane", LastName = "Doe", Id = 2 };
+
+            // act
+            var actual = Connection.GetByID(2);
+
+            // assert
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Id, actual.Id);
+        }
     }
 }
