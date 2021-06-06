@@ -73,7 +73,7 @@ namespace TaxCrudTests
             var expected = new Person() { FirstName = "Jane", LastName = "Doe", Id = 2 };
 
             // act
-            var actual = Connection.GetByID(2);
+            var actual = Connection.GetByID(2).First();
 
             // assert
             Assert.Equal(expected.Name, actual.Name);
