@@ -76,8 +76,7 @@ namespace TaxCrudTests
             var actual = Connection.GetByID(2).First();
 
             // assert
-            Assert.Equal(expected.Name, actual.Name);
-            Assert.Equal(expected.Id, actual.Id);
+            Assert.Equal(expected, actual);
         }
     }
 }

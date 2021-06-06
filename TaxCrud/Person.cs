@@ -1,16 +1,13 @@
 ﻿namespace TaxCrud
 {
-    public class Person
+    public record Person
     {
-        public int Id { get; set; }
+        public int Id { get; init; }
+
         public string FirstName { get; set; }
         public string LastName { get; set; }
-
-        public override string ToString()
-        {
-            return $"[{Id}] {FirstName} {LastName}";
-        }
-
         public string Name => FirstName + " " + LastName;
+
+        public override string ToString() => $"[{Id}] {FirstName} {LastName}";
     }
 }
