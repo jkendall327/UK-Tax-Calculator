@@ -78,5 +78,19 @@ namespace TaxCrudTests
             // assert
             Assert.Equal(expected, actual);
         }
+
+
+        [Fact]
+        public void CanUpdatePersonName()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+
+            // act
+            Connection.UpdateName(1, "John", "Evans"); // he got married and took his partner's name
+
+            // assert
+            Assert.Equal("John Evans", Connection.GetByID(1).First().Name);
+        }
     }
 }

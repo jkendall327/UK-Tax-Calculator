@@ -50,5 +50,10 @@ namespace TaxCrud
         {
             return Connection.Query<Person>($"{GetUserDetails} WHERE Id = @uid", new { uid = result });
         }
+
+        internal void UpdateName(int id, string firstName, string lastName)
+        {
+            Connection?.Execute($"UPDATE [Users] SET [FirstName] = '{firstName}', [LastName] = '{lastName}' WHERE [Id] = {id};");
+        }
     }
 }

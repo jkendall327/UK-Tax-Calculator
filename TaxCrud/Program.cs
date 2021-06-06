@@ -29,6 +29,7 @@ namespace TaxCrud
             var mainConsole = new EasyConsole.Menu()
                 .Add("View Users", ViewUsers)
                 .Add("Add User", CreateUser)
+                .Add("Update User Name", UpdateName)
                 .Add("Delete User", DeleteUser)
                 .Add("Search by name", SearchByName)
                 .Add("Clear Database", ClearDatabase)
@@ -39,6 +40,41 @@ namespace TaxCrud
                 mainConsole.Display();
                 Console.WriteLine(Environment.NewLine);
             }
+        }
+
+        private void UpdateName()
+        {
+            Console.WriteLine("Which user's name would you like to update?");
+
+            if (!int.TryParse(Console.ReadLine(), out int result))
+            {
+                Console.WriteLine("Invalid ID. Please try again.");
+                return;
+            }
+
+            var user = Connection.GetByID(result).FirstOrDefault();
+
+            if (user is null)
+            {
+                Console.WriteLine("No user with that ID found. Returning.");
+                return;
+            }
+
+            Console.WriteLine("Provide new name for user.");
+            var fname = Prompt("Input first name: ");
+            var lname = Prompt("Input last name: ");
+
+            Console.WriteLine($"This change will affect user {user.Name}. Continue?");
+
+            var yesOrNo = new EasyConsole.Menu()
+                .Add($"Yes, update {user.Name}'s name to {fname} {lname}", () =>
+                {
+                    Connection.UpdateName(result, fname, lname);
+                    Console.WriteLine("User name updated.");
+                })
+                .Add("No, do not update name", () => Console.WriteLine("Aborting."));
+
+            yesOrNo.Display();
         }
 
         private void ViewUsers()
