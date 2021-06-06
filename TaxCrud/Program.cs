@@ -18,7 +18,7 @@ namespace TaxCrud
 
     class App
     {
-        public Connection Connection { get; set; } = new();
+        public DbHelper Connection { get; set; } = new();
 
         public void Run()
         {
