@@ -23,7 +23,7 @@ namespace TaxCrudTests
             Connection.AddUser("John", "Smith");
             var results = Connection.GetAllUsers();
 
-            Assert.Equal("John Smith", results.First().Name);
+            Assert.Equal("John Smith", results.Single().Name);
         }
 
         [Fact]
@@ -41,7 +41,7 @@ namespace TaxCrudTests
         {
             Connection.AddUser("John", "Smith");
 
-            var john = Connection.GetAllUsers().First();
+            var john = Connection.GetAllUsers().Single();
 
             Connection.DeleteUser(john.Id);
 
@@ -73,7 +73,7 @@ namespace TaxCrudTests
             var expected = new Person() { FirstName = "Jane", LastName = "Doe", Id = 2 };
 
             // act
-            var actual = Connection.GetByID(2).First();
+            var actual = Connection.GetByID(2).Single();
 
             // assert
             Assert.Equal(expected, actual);
@@ -90,7 +90,7 @@ namespace TaxCrudTests
             Connection.UpdateName(1, "John", "Evans"); // he got married and took his partner's name
 
             // assert
-            Assert.Equal("John Evans", Connection.GetByID(1).First().Name);
+            Assert.Equal("John Evans", Connection.GetByID(1).Single().Name);
         }
     }
 }

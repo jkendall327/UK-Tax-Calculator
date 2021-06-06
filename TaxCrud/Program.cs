@@ -52,7 +52,7 @@ namespace TaxCrud
                 return;
             }
 
-            var user = Connection.GetByID(result).FirstOrDefault();
+            var user = Connection.GetByID(result).SingleOrDefault();
 
             if (user is null)
             {
@@ -121,6 +121,8 @@ namespace TaxCrud
 
         private void DeleteUser()
         {
+            // TODO: refactor out this repeated code for checking if an ID is valid
+
             Console.WriteLine("Provide the ID of the user to delete.");
 
             if (!int.TryParse(Console.ReadLine(), out int result))
@@ -129,7 +131,7 @@ namespace TaxCrud
                 return;
             }
 
-            var user = Connection.GetByID(result).FirstOrDefault();
+            var user = Connection.GetByID(result).SingleOrDefault();
 
             if (user is null)
             {
