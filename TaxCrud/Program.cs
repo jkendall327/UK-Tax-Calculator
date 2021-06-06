@@ -42,61 +42,38 @@ namespace TaxCrud
             }
         }
 
-        private void UpdateName()
+        /// <summary>
+        /// Parses user's input to see if it's a valid <see cref="Person.Id"/>.
+        /// </summary>
+        /// <returns>A <see cref="Person"/> if ID is valid; otherwise an <see cref="InvalidPerson"/> representing failure.</returns>
+        private Person GetPerson()
         {
-            Console.WriteLine("Which user's name would you like to update?");
-
             if (!int.TryParse(Console.ReadLine(), out int result))
             {
                 Console.WriteLine("Invalid ID. Please try again.");
-                return;
+                return new InvalidPerson();
             }
 
-            var user = Connection.GetByID(result).SingleOrDefault();
+            var person = Connection.GetByID(result).SingleOrDefault();
 
-            if (user is null)
+            if (person is null)
             {
                 Console.WriteLine("No user with that ID found. Returning.");
-                return;
+                return new InvalidPerson();
             }
 
-            Console.WriteLine("Provide new name for user.");
-            var fname = Prompt("Input first name: ");
-            var lname = Prompt("Input last name: ");
-
-            Console.WriteLine($"This change will affect user {user.Name}. Continue?");
-
-            var yesOrNo = new EasyConsole.Menu()
-                .Add($"Yes, update {user.Name}'s name to {fname} {lname}", () =>
-                {
-                    Connection.UpdateName(result, fname, lname);
-                    Console.WriteLine("User name updated.");
-                })
-                .Add("No, do not update name", () => Console.WriteLine("Aborting."));
-
-            yesOrNo.Display();
+            return person;
         }
 
-        private void ViewUsers()
+        /// <summary>
+        /// Simplifies prompting a user for input.
+        /// </summary>
+        /// <param name="query">Message to display to user.</param>
+        /// <returns>The user's input.</returns>
+        private string Prompt(string query)
         {
-            try
-            {
-                var queryResult = Connection.GetAllUsers();
-
-                if (!queryResult.Any())
-                {
-                    Console.WriteLine("No users!");
-                }
-
-                foreach (var person in queryResult)
-                {
-                    Console.WriteLine(person);
-                }
-            }
-            catch (SqliteException ex)
-            {
-                Console.WriteLine($"Database error occured: {ex.Message}");
-            }
+            Console.Write(query);
+            return Console.ReadLine();
         }
 
         private void CreateUser()
@@ -119,32 +96,52 @@ namespace TaxCrud
             }
         }
 
-        private void DeleteUser()
+        private void ViewUsers()
         {
-            // TODO: refactor out this repeated code for checking if an ID is valid
+            var queryResult = Connection.GetAllUsers();
 
-            Console.WriteLine("Provide the ID of the user to delete.");
+            if (!queryResult.Any()) Console.WriteLine("No users!");
 
-            if (!int.TryParse(Console.ReadLine(), out int result))
-            {
-                Console.WriteLine("Invalid ID. Please try again.");
-                return;
-            }
+            foreach (var person in queryResult) Console.WriteLine(person);
+        }
 
-            var user = Connection.GetByID(result).SingleOrDefault();
+        private void UpdateName()
+        {
+            Console.WriteLine("Which user's name would you like to update?");
 
-            if (user is null)
-            {
-                Console.WriteLine("No user with that ID found. Returning.");
-                return;
-            }
+            var person = GetPerson();
+            if (person is InvalidPerson) return;
 
-            Console.WriteLine($"This will delete the user {user.Name}. Continue?");
+            Console.WriteLine("Provide new name for user.");
+            var fname = Prompt("Input first name: ");
+            var lname = Prompt("Input last name: ");
+
+            Console.WriteLine($"This change will affect user {person.Name}. Continue?");
 
             var yesOrNo = new EasyConsole.Menu()
-                .Add($"Yes, delete {user.Name} permanently", () =>
+                .Add($"Yes, update {person.Name}'s name to {fname} {lname}", () =>
                 {
-                    Connection.DeleteUser(result);
+                    Connection.UpdateName(person.Id, fname, lname);
+                    Console.WriteLine("User name updated.");
+                })
+                .Add("No, do not update name", () => Console.WriteLine("Aborting."));
+
+            yesOrNo.Display();
+        }
+
+        private void DeleteUser()
+        {
+            Console.WriteLine("Provide the ID of the user to delete.");
+
+            var person = GetPerson();
+            if (person is InvalidPerson) return;
+
+            Console.WriteLine($"This will delete the user {person.Name}. Continue?");
+
+            var yesOrNo = new EasyConsole.Menu()
+                .Add($"Yes, delete {person.Name} permanently", () =>
+                {
+                    Connection.DeleteUser(person.Id);
                     Console.WriteLine("User deleted.");
                 })
                 .Add("No, do not delete", () => Console.WriteLine("Aborting."));
@@ -184,12 +181,6 @@ namespace TaxCrud
                 .Add("No, keep my data", () => { Console.WriteLine("Aborting."); });
 
             yesOrNo.Display();
-        }
-
-        private string Prompt(string query)
-        {
-            Console.Write(query);
-            return Console.ReadLine();
         }
     }
 }

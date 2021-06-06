@@ -10,4 +10,6 @@
 
         public override string ToString() => $"[{Id}] {FirstName} {LastName}";
     }
+
+    public record InvalidPerson : Person { }
 }
