@@ -6,26 +6,26 @@ namespace TaxCrud
 {
     internal class DbHelper
     {
-        public SqliteConnection Connection { get; set; }
+        internal SqliteConnection Connection { get; set; }
 
-        public DbHelper(string connectionString = "Data Source=mydb.db;")
+        internal DbHelper(string connectionString = "Data Source=mydb.db;")
         {
             Connection = new SqliteConnection(connectionString);
         }
 
-        public void Initialize()
+        internal void Initialize()
         {
             Connection?.Execute("CREATE TABLE IF NOT EXISTS Users (Id INTEGER PRIMARY KEY AUTOINCREMENT, FirstName VARCHAR(20), LastName VARCHAR(20));");
         }
 
-        const string GetUserDetails = "SELECT [Id], [FirstName],[LastName] FROM [Users]";
+        internal const string GetUserDetails = "SELECT [Id], [FirstName],[LastName] FROM [Users]";
 
-        public void AddUser(string firstName, string lastName)
+        internal void AddUser(string firstName, string lastName)
         {
             Connection?.Execute("INSERT INTO Users (FirstName, LastName) VALUES (@fname,@lname)", new { fname = firstName, lname = lastName });
         }
 
-        public IEnumerable<Person> GetAllUsers()
+        internal IEnumerable<Person> GetAllUsers()
         {
             return Connection?.Query<Person>(GetUserDetails);
         }

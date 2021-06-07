@@ -16,11 +16,11 @@ namespace TaxCrud
         static void Main() => new App().Run();
     }
 
-    class App
+    internal class App
     {
-        public DbHelper Connection { get; set; } = new();
+        internal DbHelper Connection { get; set; } = new();
 
-        public void Run()
+        internal void Run()
         {
             Console.WriteLine("Tax Simulator 2021");
 

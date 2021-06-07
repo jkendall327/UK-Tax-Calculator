@@ -1,15 +1,15 @@
 ﻿namespace TaxCrud
 {
-    public record Person
+    internal record Person
     {
-        public int Id { get; init; }
+        internal int Id { get; init; }
 
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Name => FirstName + " " + LastName;
+        internal string FirstName { get; set; }
+        internal string LastName { get; set; }
+        internal string Name => FirstName + " " + LastName;
 
         public override string ToString() => $"[{Id}] {FirstName} {LastName}";
     }
 
-    public record InvalidPerson : Person { }
+    internal record InvalidPerson : Person { }
 }
