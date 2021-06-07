@@ -92,5 +92,21 @@ namespace TaxCrudTests
             // assert
             Assert.Equal("John Evans", Connection.GetByID(1).Single().Name);
         }
+
+
+        [Fact]
+        public void CanAddTransactionToPerson()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+            Connection.AddTransaction(1, 43.58m);
+            Connection.AddTransaction(1, -11.28m);
+
+            // act
+            var person = Connection.GetByID(1).Single();
+
+            // assert
+            Assert.Equal(32.3m, person.Balance);
+        }
     }
 }

@@ -24,7 +24,7 @@ namespace TaxCrud
                 "(Id INTEGER PRIMARY KEY AUTOINCREMENT, " +
                 "Amount INTEGER, " +
                 "Timestamp DATETIME DEFAULT CURRENT_TIMESTAMP, " +
-                "transuser INTEGER, " +
+                "Transuser INTEGER, " +
                 "FOREIGN KEY(transuser) REFERENCES Users(Id));");
         }
 
@@ -64,6 +64,11 @@ namespace TaxCrud
         internal void UpdateName(int id, string firstName, string lastName)
         {
             Connection.Execute($"UPDATE [Users] SET [FirstName] = '{firstName}', [LastName] = '{lastName}' WHERE [Id] = {id};");
+        }
+
+        internal void AddTransaction(int id, decimal amount)
+        {
+            Connection.Execute($"INSERT INTO [Transactions] (Amount, Transuser) VALUES (@am, @uid)", new { am = amount, uid = id });
         }
     }
 }
