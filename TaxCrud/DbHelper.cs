@@ -70,5 +70,10 @@ namespace TaxCrud
         {
             Connection.Execute($"INSERT INTO [Transactions] (Amount, Transuser) VALUES (@am, @uid)", new { am = amount, uid = id });
         }
+
+        internal IEnumerable<Transaction> GetTransactions(int id)
+        {
+            return Connection.Query<Transaction>("SELECT [Amount],[Timestamp] FROM [Transactions] WHERE [Transuser] = @uid", new { uid = id });
+        }
     }
 }

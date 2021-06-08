@@ -14,8 +14,8 @@ namespace TaxCrudTests
             var person = new Person();
             var transactions = new List<Transaction>
             {
-                Transaction.Create(54.32m),
-                Transaction.Create(-28.11m)
+                new Transaction(){ Amount = 54.32m },
+                new Transaction(){ Amount = -28.11m }
             };
 
             person.Transactions = transactions;
