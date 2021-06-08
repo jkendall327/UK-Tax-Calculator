@@ -54,7 +54,7 @@ namespace TaxCrud
                 return new InvalidPerson();
             }
 
-            var person = Connection.GetByID(result).SingleOrDefault();
+            var person = Connection.GetByID(result);
 
             if (person is null)
             {

@@ -1,6 +1,7 @@
 ﻿using Dapper;
 using Microsoft.Data.Sqlite;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace TaxCrud
 {
@@ -56,9 +57,12 @@ namespace TaxCrud
             Initialize();
         }
 
-        internal IEnumerable<Person> GetByID(int result)
+        internal Person GetByID(int result)
         {
-            return Connection.Query<Person>($"{GetUserDetails} WHERE Id = @uid", new { uid = result });
+            var person = Connection.Query<Person>($"{GetUserDetails} WHERE Id = @uid", new { uid = result }).Single();
+            person.Transactions = GetTransactions(person.Id).ToList();
+
+            return person;
         }
 
         internal void UpdateName(int id, string firstName, string lastName)

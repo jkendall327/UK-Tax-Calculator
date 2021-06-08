@@ -73,10 +73,12 @@ namespace TaxCrudTests
             var expected = new Person() { FirstName = "Jane", LastName = "Doe", Id = 2 };
 
             // act
-            var actual = Connection.GetByID(2).Single();
+            var actual = Connection.GetByID(2);
 
             // assert
-            Assert.Equal(expected, actual);
+            // todo write custom equality comparer for person, breaks because List<> is reference type
+            Assert.Equal(expected.Name, actual.Name);
+            Assert.Equal(expected.Balance, actual.Balance);
         }
 
 
@@ -90,7 +92,7 @@ namespace TaxCrudTests
             Connection.UpdateName(1, "John", "Evans"); // he got married and took his partner's name
 
             // assert
-            Assert.Equal("John Evans", Connection.GetByID(1).Single().Name);
+            Assert.Equal("John Evans", Connection.GetByID(1).Name);
         }
 
 
@@ -103,7 +105,7 @@ namespace TaxCrudTests
             Connection.AddTransaction(1, -11.28m);
 
             // act
-            var person = Connection.GetByID(1).Single();
+            var person = Connection.GetByID(1);
 
             // assert
             Assert.Equal(32.3m, person.Balance);
