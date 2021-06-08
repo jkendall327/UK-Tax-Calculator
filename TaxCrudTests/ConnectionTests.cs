@@ -83,6 +83,14 @@ namespace TaxCrudTests
 
 
         [Fact]
+        public void GetById_ReturnsInvalidPerson_WhenIdIsInvalid()
+        {
+            var actual = Connection.GetByID(int.MaxValue);
+            Assert.True(actual is InvalidPerson);
+        }
+
+
+        [Fact]
         public void CanUpdatePersonName()
         {
             // arrange

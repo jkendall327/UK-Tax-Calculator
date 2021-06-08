@@ -56,11 +56,7 @@ namespace TaxCrud
 
             var person = Connection.GetByID(result);
 
-            if (person is null)
-            {
-                Console.WriteLine("No user with that ID found. Returning.");
-                return new InvalidPerson();
-            }
+            if (person is InvalidPerson) Console.WriteLine("No user with that ID found. Returning.");
 
             return person;
         }

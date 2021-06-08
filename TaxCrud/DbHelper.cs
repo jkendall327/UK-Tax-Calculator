@@ -59,7 +59,10 @@ namespace TaxCrud
 
         internal Person GetByID(int result)
         {
-            var person = Connection.Query<Person>($"{GetUserDetails} WHERE Id = @uid", new { uid = result }).Single();
+            var person = Connection.Query<Person>($"{GetUserDetails} WHERE Id = @uid", new { uid = result }).SingleOrDefault();
+
+            if (person is null) return new InvalidPerson();
+
             person.Transactions = GetTransactions(person.Id).ToList();
 
             return person;
