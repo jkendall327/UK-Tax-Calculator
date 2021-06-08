@@ -68,17 +68,27 @@ namespace TaxCrud
         /// <returns>A <see cref="Person"/> if ID is valid; otherwise an <see cref="InvalidPerson"/> representing failure.</returns>
         private Person GetPerson()
         {
-            if (!int.TryParse(Console.ReadLine(), out int result))
-            {
-                Console.WriteLine("Invalid ID. Please try again.");
-                return new InvalidPerson();
-            }
+            var desiredID = DemandValidInt();
 
-            var person = Connection.GetByID(result);
+            var person = Connection.GetByID(desiredID);
 
-            if (person is InvalidPerson) Console.WriteLine("No user with that ID found. Returning.");
+            if (person is InvalidPerson) Console.WriteLine($"No user with ID {desiredID} found. Returning.");
 
             return person;
+        }
+
+        // repeats until user gives input that satisfies TryParse()
+        private int DemandValidInt()
+        {
+            while (true)
+            {
+                var input = Console.ReadLine();
+
+                if (int.TryParse(input, out int result))
+                    return result;
+
+                Console.WriteLine("Invalid ID. Please try again.");
+            }
         }
 
         /// <summary>
