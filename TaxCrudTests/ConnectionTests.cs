@@ -91,9 +91,7 @@ namespace TaxCrudTests
             var actual = Connection.GetByID(2);
 
             // assert
-            // todo write custom equality comparer for person, breaks because List<> is reference type
-            Assert.Equal(expected.Name, actual.Name);
-            Assert.Equal(expected.Balance, actual.Balance);
+            Assert.Equal(expected, actual, new PersonComparer());
         }
 
 
