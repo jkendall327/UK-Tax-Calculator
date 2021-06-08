@@ -60,7 +60,9 @@ namespace TaxCrud
 
         internal void ResetDatabase()
         {
+            Connection.Execute("DROP TABLE [Transactions];");
             Connection.Execute("DROP TABLE [Users];");
+
             Initialize();
         }
 
