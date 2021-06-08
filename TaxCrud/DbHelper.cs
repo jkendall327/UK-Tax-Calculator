@@ -38,7 +38,14 @@ namespace TaxCrud
 
         internal IEnumerable<Person> GetAllUsers()
         {
-            return Connection.Query<Person>(GetUserDetails);
+            var people = Connection.Query<Person>(GetUserDetails);
+
+            foreach (var person in people)
+            {
+                person.Transactions = GetTransactions(person.Id).ToList();
+            }
+
+            return people;
         }
 
         internal IEnumerable<Person> GetByName(string firstName, string lastName)
@@ -73,9 +80,9 @@ namespace TaxCrud
             Connection.Execute($"UPDATE [Users] SET [FirstName] = '{firstName}', [LastName] = '{lastName}' WHERE [Id] = {id};");
         }
 
-        internal void AddTransaction(int id, decimal amount)
+        internal void AddTransaction(int id, Transaction trans)
         {
-            Connection.Execute($"INSERT INTO [Transactions] (Amount, Transuser) VALUES (@am, @uid)", new { am = amount, uid = id });
+            Connection.Execute($"INSERT INTO [Transactions] (Amount, Transuser) VALUES (@am, @uid)", new { am = trans.Amount, uid = id });
         }
 
         internal IEnumerable<Transaction> GetTransactions(int id)

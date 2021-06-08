@@ -105,12 +105,12 @@ namespace TaxCrudTests
 
 
         [Fact]
-        public void CanAddTransactionToPerson()
+        public void GetByID_ReturnsPersonObjectWithCorrectTransactions_WhenGivenValidID()
         {
             // arrange
             Connection.AddUser("John", "Smith");
-            Connection.AddTransaction(1, 43.58m);
-            Connection.AddTransaction(1, -11.28m);
+            Connection.AddTransaction(1, new Transaction(43.58m));
+            Connection.AddTransaction(1, new Transaction(-11.28m));
 
             // act
             var person = Connection.GetByID(1);
@@ -121,18 +121,34 @@ namespace TaxCrudTests
 
 
         [Fact]
-        public void CanGetTransactionsById()
+        public void GetTransactions_ReturnsCorrectValues_WhenGivenValidID()
         {
             // arrange
             Connection.AddUser("John", "Smith");
-            Connection.AddTransaction(1, 43.58m);
-            Connection.AddTransaction(1, -11.28m);
+            Connection.AddTransaction(1, new Transaction(43.58m));
+            Connection.AddTransaction(1, new Transaction(-11.28m));
 
             // act
             var transactions = Connection.GetTransactions(1);
 
             // assert
             Assert.Equal(32.3m, transactions.Sum(x => x.Amount));
+        }
+
+
+        [Fact]
+        public void AddTransaction_RoundsValues_WhenMoreThanTwoDecimalPlaces()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+            Connection.AddTransaction(1, new Transaction(43.5853453m)); // 43.59
+            Connection.AddTransaction(1, new Transaction(-11.3433453m)); // -11.34
+
+            // act
+            var person = Connection.GetByID(1);
+
+            // assert
+            Assert.Equal(32.25m, person.Balance);
         }
     }
 }

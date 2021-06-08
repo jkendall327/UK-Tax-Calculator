@@ -5,8 +5,20 @@ namespace TaxCrud
     internal record Transaction
     {
         public decimal Amount { get; set; }
-
         public DateTime Timestamp { get; set; }
+
+        public Transaction(decimal amount)
+        {
+            Amount = Math.Round(amount, 2);
+        }
+
+        public Transaction()
+        {
+        }
+
     }
-    internal record InvalidTransaction : Transaction { }
+    internal record InvalidTransaction : Transaction
+    {
+
+    }
 }

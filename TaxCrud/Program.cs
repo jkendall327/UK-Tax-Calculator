@@ -32,6 +32,7 @@ namespace TaxCrud
                 .Add("Update User Name", UpdateName)
                 .Add("Delete User", DeleteUser)
                 .Add("Search by name", SearchByName)
+                .Add("Add transaction", AddTransaction)
                 .Add("Clear Database", ClearDatabase)
                 .Add("Exit", () => Environment.Exit(0));
 
@@ -98,7 +99,10 @@ namespace TaxCrud
 
             if (!queryResult.Any()) Console.WriteLine("No users!");
 
-            foreach (var person in queryResult) Console.WriteLine(person);
+            foreach (var person in queryResult)
+            {
+                Console.WriteLine(person + " Balance: " + person.Balance);
+            }
         }
 
         private void UpdateName()
@@ -162,6 +166,27 @@ namespace TaxCrud
             {
                 Console.WriteLine(person.ToString());
             }
+        }
+
+        private void AddTransaction()
+        {
+            Console.WriteLine("Provide the ID of the user to add a transaction for.");
+
+            var person = GetPerson();
+            if (person is InvalidPerson) return;
+
+            Console.WriteLine("Provide transaction amount.");
+
+            if (decimal.TryParse(Console.ReadLine(), out decimal amount))
+            {
+                var trans = new Transaction(amount);
+
+                Connection.AddTransaction(person.Id, new Transaction(amount));
+                Console.WriteLine($"Transaction for {trans.Amount} added.");
+                return;
+            }
+
+            Console.WriteLine("Number formatted incorrectly - please try again.");
         }
 
         private void ClearDatabase()
