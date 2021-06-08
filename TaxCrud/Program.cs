@@ -75,13 +75,28 @@ namespace TaxCrud
 
         private void CreateUser()
         {
-            var fname = Prompt("Enter first name: ");
-            var lname = Prompt("Enter last name: ");
+            var firstName = Prompt("Enter first name: ");
+            var lastName = Prompt("Enter last name: ");
+
+            bool ok = true;
+
+            if (firstName.Length > 20 || lastName.Length > 20)
+            {
+                Console.WriteLine("Name is too long and will be truncated.");
+
+                var continuePrompt = new EasyConsole.Menu()
+                    .Add($"Continue", () => { })
+                    .Add("Abort", () => ok = false);
+
+                continuePrompt.Display();
+            }
+
+            if (!ok) return;
 
             try
             {
-                Connection.AddUser(fname, lname);
-                Console.WriteLine($"New user {fname} {lname} added succesfully.");
+                Connection.AddUser(firstName, lastName);
+                Console.WriteLine($"New user {firstName} {lastName} added succesfully.");
             }
             catch (SqliteException ex)
             {
