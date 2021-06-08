@@ -27,7 +27,8 @@ namespace TaxCrud
             Connection.Initialize();
 
             var mainConsole = new EasyConsole.Menu()
-                .Add("View Users", ViewUsers)
+                .Add("View User Details", ViewUserDetails)
+                .Add("View All Users", ViewUsers)
                 .Add("Add User", CreateUser)
                 .Add("Update User Name", UpdateName)
                 .Add("Delete User", DeleteUser)
@@ -39,19 +40,26 @@ namespace TaxCrud
             while (true)
             {
                 mainConsole.Display();
-                Console.WriteLine(Environment.NewLine);
             }
         }
 
-        private void CalculateTax()
+        private void ViewUserDetails()
         {
-            Console.WriteLine("Which user would you like to calculate tax info for?");
+            Console.WriteLine("Which user would you like to see details for?");
 
             var person = GetPerson();
             if (person is InvalidPerson) return;
 
+            Console.WriteLine(person.Name);
+            Console.WriteLine("Current balance: " + person.Balance);
+            Console.WriteLine("Tax to pay over last year: " + person.CalculateTax(TimeSpan.FromDays(360), DateTime.Now));
 
+            Console.WriteLine("Most recent transactions:");
 
+            foreach (var transaction in person.Transactions.TakeLast(5))
+            {
+                Console.WriteLine(transaction);
+            }
         }
 
         /// <summary>

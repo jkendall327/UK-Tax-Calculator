@@ -16,6 +16,8 @@ namespace TaxCrud
         {
         }
 
+        public override string ToString() => Timestamp + ": " + Amount;
+
     }
     internal record InvalidTransaction : Transaction
     {
