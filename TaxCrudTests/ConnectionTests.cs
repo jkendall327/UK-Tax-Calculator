@@ -61,6 +61,21 @@ namespace TaxCrudTests
             Assert.Empty(Connection.GetAllUsers());
         }
 
+        [Fact]
+        public void ResetDatabase_RemovesAllUsers_WhenMultipleUsers()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+            Connection.AddUser("Jane", "Smith");
+            Connection.AddUser("Alice", "Doe");
+
+            // act
+            Connection.ResetDatabase();
+
+            // assert
+            Assert.Empty(Connection.GetAllUsers());
+        }
+
 
         [Fact]
         public void GetByID_ReturnsEqualPersonObject_WhenIDIsValid()
@@ -101,6 +116,19 @@ namespace TaxCrudTests
 
             // assert
             Assert.Equal("John Evans", Connection.GetByID(1).Name);
+        }
+
+        [Fact]
+        public void UpdateName_DoesNotUpdateName_WhenIDIsInvalid()
+        {
+            // arrange
+            Connection.AddUser("John", "Smith");
+
+            // act
+            Connection.UpdateName(2, "John", "Evans");
+
+            // assert
+            Assert.Equal("John Smith", Connection.GetByID(1).Name);
         }
 
 
