@@ -18,7 +18,7 @@ namespace TaxCrudTests
         }
 
         [Fact]
-        public void CanAddUser()
+        public void AddUser_CorrectlyAddsUser_WhenGivenOneInput()
         {
             Connection.AddUser("John", "Smith");
             var results = Connection.GetAllUsers();
@@ -27,7 +27,7 @@ namespace TaxCrudTests
         }
 
         [Fact]
-        public void CanAddMultipleUsers()
+        public void AddUser_CorrectlyAddsUsers_WhenGivenMultipleInputs()
         {
             Connection.AddUser("John", "Smith");
             Connection.AddUser("Jane", "Smith");
@@ -37,7 +37,7 @@ namespace TaxCrudTests
         }
 
         [Fact]
-        public void CanDeleteUser()
+        public void DeleteUser_RemovesUser_WhenGivenCorrectID()
         {
             Connection.AddUser("John", "Smith");
 
@@ -49,7 +49,7 @@ namespace TaxCrudTests
         }
 
         [Fact]
-        public void CanResetDatabase()
+        public void ResetDatabase_RemovesAllUsers_WhenOnlyOneUser()
         {
             // arrange
             Connection.AddUser("John", "Smith");
@@ -63,7 +63,7 @@ namespace TaxCrudTests
 
 
         [Fact]
-        public void CanGetByID()
+        public void GetByID_ReturnsEqualPersonObject_WhenIDIsValid()
         {
             // arrange
             Connection.AddUser("John", "Smith");
@@ -91,7 +91,7 @@ namespace TaxCrudTests
 
 
         [Fact]
-        public void CanUpdatePersonName()
+        public void UpdateName_UpdatesName_WhenIDIsValid()
         {
             // arrange
             Connection.AddUser("John", "Smith");
