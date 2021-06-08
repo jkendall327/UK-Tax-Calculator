@@ -43,6 +43,17 @@ namespace TaxCrud
             }
         }
 
+        private void CalculateTax()
+        {
+            Console.WriteLine("Which user would you like to calculate tax info for?");
+
+            var person = GetPerson();
+            if (person is InvalidPerson) return;
+
+
+
+        }
+
         /// <summary>
         /// Parses user's input to see if it's a valid <see cref="Person.Id"/>.
         /// </summary>
