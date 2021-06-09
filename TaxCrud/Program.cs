@@ -74,8 +74,8 @@ namespace TaxCrud
 
         private void CreateUser()
         {
-            var firstName = Prompt("Enter first name: ");
-            var lastName = Prompt("Enter last name: ");
+            var firstName = Input.ReadString("Enter first name: ");
+            var lastName = Input.ReadString("Enter last name: ");
 
             bool ok = true;
 
@@ -125,8 +125,8 @@ namespace TaxCrud
             if (person is InvalidPerson) return;
 
             Console.WriteLine("Provide new name for user.");
-            var fname = Prompt("Input first name: ");
-            var lname = Prompt("Input last name: ");
+            var fname = Input.ReadString("Input first name: ");
+            var lname = Input.ReadString("Input last name: ");
 
             Console.WriteLine($"This change will affect user {person.Name}. Continue?");
 
@@ -163,8 +163,8 @@ namespace TaxCrud
 
         private void SearchByName()
         {
-            var fname = Prompt("Input first name: ");
-            var lname = Prompt("Input last name: ");
+            var fname = Input.ReadString("Input first name: ");
+            var lname = Input.ReadString("Input last name: ");
 
             var results = Connection.GetByName(fname, lname);
 
@@ -224,38 +224,14 @@ namespace TaxCrud
         /// <returns>A <see cref="Person"/> if ID is valid; otherwise an <see cref="InvalidPerson"/> representing failure.</returns>
         private Person GetPerson()
         {
-            var desiredID = DemandValidInt();
+            // TODO: get the highest ID in the database here?
+            var desiredID = Input.ReadInt(1, int.MaxValue);
 
             var person = Connection.GetByID(desiredID);
 
             if (person is InvalidPerson) Console.WriteLine($"No user with ID {desiredID} found. Returning.");
 
             return person;
-        }
-
-        // repeats until user gives input that satisfies TryParse()
-        private int DemandValidInt()
-        {
-            while (true)
-            {
-                var input = Console.ReadLine();
-
-                if (int.TryParse(input, out int result))
-                    return result;
-
-                Console.WriteLine("Invalid ID. Please try again.");
-            }
-        }
-
-        /// <summary>
-        /// Simplifies prompting a user for input.
-        /// </summary>
-        /// <param name="query">Message to display to user.</param>
-        /// <returns>The user's input.</returns>
-        private string Prompt(string query)
-        {
-            Console.Write(query);
-            return Console.ReadLine();
         }
 
         private Table GetUserColumns()
