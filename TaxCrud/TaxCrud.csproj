@@ -5,6 +5,10 @@
     <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <NoWarn>1701;1702;NU1701</NoWarn>
+  </PropertyGroup>
+
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="EasyConsole" Version="1.1.0" />
