@@ -50,8 +50,8 @@ namespace TaxCrud
             if (person is InvalidPerson) return;
 
             Console.WriteLine(person.Name);
-            Console.WriteLine("Current balance: " + person.Balance);
-            Console.WriteLine("Tax to pay over last year: " + person.CalculateTax(TimeSpan.FromDays(360), DateTime.Now));
+            Console.WriteLine("Current balance: " + person.Balance.ToString("#,##0.00"));
+            Console.WriteLine("Tax to pay over last year: " + person.CalculateTax(TimeSpan.FromDays(360), DateTime.Now).ToString("#,##0.00"));
 
             Console.WriteLine("Most recent transactions:");
 

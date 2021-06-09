@@ -16,7 +16,7 @@ namespace TaxCrud
         {
         }
 
-        public override string ToString() => Timestamp + ": " + Amount;
+        public override string ToString() => Timestamp + ": " + Amount.ToString("#,##0.00");
 
     }
     internal record InvalidTransaction : Transaction
