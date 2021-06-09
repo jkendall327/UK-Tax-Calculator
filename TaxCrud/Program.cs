@@ -8,6 +8,9 @@ using System.Runtime.CompilerServices;
 
 namespace TaxCrud
 {
+    // TODO: password protect user details
+    // TODO: subnest edit delete user under user details
+
     class Program
     {
         static void Main() => new App(new SqliteHelper()).Run();
