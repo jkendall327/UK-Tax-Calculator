@@ -7,18 +7,17 @@ using System.Runtime.CompilerServices;
 
 namespace TaxCrud
 {
-    // store Person record
-    // store Entry record for each financial transaction
-    // determine total tax to pay
-
     class Program
     {
-        static void Main() => new App().Run();
+        static void Main() => new App(new SqliteHelper()).Run();
     }
 
     internal class App
     {
-        internal DbHelper Connection { get; set; } = new();
+        internal IDatabaseHelper Connection { get; set; }
+
+        public App(IDatabaseHelper connection)
+            => Connection = connection ?? throw new ArgumentNullException(nameof(connection));
 
         internal void Run()
         {
