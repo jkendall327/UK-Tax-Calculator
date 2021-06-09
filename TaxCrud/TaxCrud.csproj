@@ -8,7 +8,8 @@
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.0.90" />
     <PackageReference Include="EasyConsole" Version="1.1.0" />
-    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.6" />
+    <PackageReference Include="Microsoft.Data.Sqlite.Core" Version="5.0.7" />
+    <PackageReference Include="Spectre.Console" Version="0.39.0" />
     <PackageReference Include="SQLitePCLRaw.bundle_winsqlite3" Version="2.0.4" />
   </ItemGroup>
 
