@@ -6,11 +6,11 @@ namespace TaxCrudTests
 {
     public class ConnectionTests
     {
-        internal DbHelper Connection { get; set; }
+        internal SqliteHelper Connection { get; set; }
 
         public ConnectionTests()
         {
-            Connection = new DbHelper("Data Source=:memory:;");
+            Connection = new SqliteHelper("Data Source=:memory:;");
 
             // If we don't open the connection manually, Dapper will automatically open/close it when we call .Execute(), detroying the in-memory DB.
             Connection.Connection.Open();
