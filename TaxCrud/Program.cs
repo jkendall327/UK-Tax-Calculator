@@ -1,4 +1,5 @@
 ﻿using Microsoft.Data.Sqlite;
+using Spectre.Console;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -140,12 +141,25 @@ namespace TaxCrud
         {
             var queryResult = Connection.GetAllUsers();
 
-            if (!queryResult.Any()) Console.WriteLine("No users!");
+            if (!queryResult.Any())
+            {
+                Console.WriteLine("No users!");
+                return;
+            }
+
+            var table = new Table();
+
+            table.AddColumn("Id");
+            table.AddColumn("Name");
+            table.AddColumn("Balance");
+            table.AddColumn("Outstanding tax");
 
             foreach (var person in queryResult)
             {
-                Console.WriteLine(person + " Balance: " + person.Balance);
+                table.AddRow(new string[] { person.Id.ToString(), person.Name, person.Balance.ToString(), person.TaxOverLastYear().ToString() });
             }
+
+            AnsiConsole.Render(table);
         }
 
         private void UpdateName()

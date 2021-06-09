@@ -21,6 +21,8 @@ namespace TaxCrud
 
         public override string ToString() => $"[{Id}] {FirstName} {LastName}";
 
+        internal decimal TaxOverLastYear() => CalculateTax(TimeSpan.FromDays(360), DateTime.Now);
+
         /// <summary>
         /// Calculates the tax a user in the UK should pay for income earned during a given timespan.
         /// </summary>
