@@ -43,23 +43,44 @@ namespace TaxCrud
             }
         }
 
+        private Table GetUserColumns()
+        {
+            return new Table()
+                .AddColumn("Id")
+                .AddColumn("Name")
+                .AddColumn("Current balance")
+                .AddColumn("Outstanding tax (past year)");
+        }
+
+        private string[] GetUserRow(Person person)
+        {
+            return new string[] { person.Id.ToString(), person.Name, person.Balance.ToString("#,##0.00"), person.TaxOverLastYear().ToString("#,##0.00") };
+        }
+
         private void ViewUserDetails()
         {
-            Console.WriteLine("Which user would you like to see details for?");
+            Console.WriteLine("See details for which user?");
 
             var person = GetPerson();
             if (person is InvalidPerson) return;
 
-            Console.WriteLine(person.Name);
-            Console.WriteLine("Current balance: " + person.Balance.ToString("#,##0.00"));
-            Console.WriteLine("Tax to pay over last year: " + person.CalculateTax(TimeSpan.FromDays(360), DateTime.Now).ToString("#,##0.00"));
+            var table = GetUserColumns().AddRow(GetUserRow(person));
+            AnsiConsole.Render(table);
 
             Console.WriteLine("Most recent transactions:");
 
+            if (person.Transactions.IsEmpty()) return;
+
+            var transactions = new Table()
+                .AddColumn("Timestamp")
+                .AddColumn("Amount");
+
             foreach (var transaction in person.Transactions.TakeLast(5))
             {
-                Console.WriteLine(transaction);
+                transactions.AddRow(new string[] { transaction.Timestamp.ToString(), transaction.Amount.ToString() });
             }
+
+            AnsiConsole.Render(transactions);
         }
 
         /// <summary>
@@ -147,16 +168,11 @@ namespace TaxCrud
                 return;
             }
 
-            var table = new Table();
-
-            table.AddColumn("Id");
-            table.AddColumn("Name");
-            table.AddColumn("Balance");
-            table.AddColumn("Outstanding tax");
+            var table = GetUserColumns();
 
             foreach (var person in queryResult)
             {
-                table.AddRow(new string[] { person.Id.ToString(), person.Name, person.Balance.ToString(), person.TaxOverLastYear().ToString() });
+                table.AddRow(GetUserRow(person));
             }
 
             AnsiConsole.Render(table);
