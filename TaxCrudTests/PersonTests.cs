@@ -1,4 +1,5 @@
-﻿using System;
+﻿using FluentAssertions;
+using System;
 using System.Collections.Generic;
 using TaxCrud;
 using Xunit;
@@ -22,7 +23,7 @@ namespace TaxCrudTests
             person.Transactions = transactions;
 
             // assert
-            Assert.Equal(26.21m, person.Balance);
+            person.Balance.Should().Be(26.21m);
         }
 
 
@@ -46,7 +47,7 @@ namespace TaxCrudTests
             decimal taxToPay = _sut.CalculateTax(range, DateTime.Now);
 
             // assert
-            Assert.Equal(expected, taxToPay);
+            expected.Should().Be(taxToPay);
         }
 
 
@@ -69,7 +70,7 @@ namespace TaxCrudTests
             decimal taxToPay = _sut.CalculateTax(TimeSpan.FromDays(360), DateTime.Now);
 
             // assert
-            Assert.Equal(0, taxToPay);
+            taxToPay.Should().Be(0, "because total income was negative");
         }
     }
 }
