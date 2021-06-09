@@ -43,20 +43,6 @@ namespace TaxCrud
             }
         }
 
-        private Table GetUserColumns()
-        {
-            return new Table()
-                .AddColumn("Id")
-                .AddColumn("Name")
-                .AddColumn("Current balance")
-                .AddColumn("Outstanding tax (past year)");
-        }
-
-        private string[] GetUserRow(Person person)
-        {
-            return new string[] { person.Id.ToString(), person.Name, person.Balance.ToString("#,##0.00"), person.TaxOverLastYear().ToString("#,##0.00") };
-        }
-
         private void ViewUserDetails()
         {
             Console.WriteLine("See details for which user?");
@@ -81,46 +67,6 @@ namespace TaxCrud
             }
 
             AnsiConsole.Render(transactions);
-        }
-
-        /// <summary>
-        /// Parses user's input to see if it's a valid <see cref="Person.Id"/>.
-        /// </summary>
-        /// <returns>A <see cref="Person"/> if ID is valid; otherwise an <see cref="InvalidPerson"/> representing failure.</returns>
-        private Person GetPerson()
-        {
-            var desiredID = DemandValidInt();
-
-            var person = Connection.GetByID(desiredID);
-
-            if (person is InvalidPerson) Console.WriteLine($"No user with ID {desiredID} found. Returning.");
-
-            return person;
-        }
-
-        // repeats until user gives input that satisfies TryParse()
-        private int DemandValidInt()
-        {
-            while (true)
-            {
-                var input = Console.ReadLine();
-
-                if (int.TryParse(input, out int result))
-                    return result;
-
-                Console.WriteLine("Invalid ID. Please try again.");
-            }
-        }
-
-        /// <summary>
-        /// Simplifies prompting a user for input.
-        /// </summary>
-        /// <param name="query">Message to display to user.</param>
-        /// <returns>The user's input.</returns>
-        private string Prompt(string query)
-        {
-            Console.Write(query);
-            return Console.ReadLine();
         }
 
         private void CreateUser()
@@ -265,6 +211,62 @@ namespace TaxCrud
                 .Add("No, keep my data", () => { Console.WriteLine("Aborting."); });
 
             yesOrNo.Display();
+        }
+
+        /* helper methods */
+
+        /// <summary>
+        /// Parses user's input to see if it's a valid <see cref="Person.Id"/>.
+        /// </summary>
+        /// <returns>A <see cref="Person"/> if ID is valid; otherwise an <see cref="InvalidPerson"/> representing failure.</returns>
+        private Person GetPerson()
+        {
+            var desiredID = DemandValidInt();
+
+            var person = Connection.GetByID(desiredID);
+
+            if (person is InvalidPerson) Console.WriteLine($"No user with ID {desiredID} found. Returning.");
+
+            return person;
+        }
+
+        // repeats until user gives input that satisfies TryParse()
+        private int DemandValidInt()
+        {
+            while (true)
+            {
+                var input = Console.ReadLine();
+
+                if (int.TryParse(input, out int result))
+                    return result;
+
+                Console.WriteLine("Invalid ID. Please try again.");
+            }
+        }
+
+        /// <summary>
+        /// Simplifies prompting a user for input.
+        /// </summary>
+        /// <param name="query">Message to display to user.</param>
+        /// <returns>The user's input.</returns>
+        private string Prompt(string query)
+        {
+            Console.Write(query);
+            return Console.ReadLine();
+        }
+
+        private Table GetUserColumns()
+        {
+            return new Table()
+                .AddColumn("Id")
+                .AddColumn("Name")
+                .AddColumn("Current balance")
+                .AddColumn("Outstanding tax (past year)");
+        }
+
+        private string[] GetUserRow(Person person)
+        {
+            return new string[] { person.Id.ToString(), person.Name, person.Balance.ToString("#,##0.00"), person.TaxOverLastYear().ToString("#,##0.00") };
         }
     }
 }
