@@ -1,4 +1,4 @@
-﻿using Microsoft.Data.Sqlite;
+﻿using EasyConsole;
 using Spectre.Console;
 using System;
 using System.Linq;
@@ -26,7 +26,7 @@ namespace TaxCrud
 
             Connection.Initialize();
 
-            var mainConsole = new EasyConsole.Menu()
+            var mainConsole = new Menu()
                 .Add("View User Details", ViewUserDetails)
                 .Add("View All Users", ViewUsers)
                 .Add("Add User", CreateUser)
@@ -143,19 +143,9 @@ namespace TaxCrud
 
             if (!ok) return;
 
-            try
-            {
-                Connection.AddUser(firstName, lastName);
-                Console.WriteLine($"New user {firstName} {lastName} added succesfully.");
-            }
-            catch (SqliteException ex)
-            {
-                Console.WriteLine($"Database error occured: {ex.Message}");
-            }
-            finally
-            {
-                ViewUsers();
-            }
+            Connection.AddUser(firstName, lastName);
+            Console.WriteLine($"New user {firstName} {lastName} added succesfully.");
+            ViewUsers();
         }
 
         private void ViewUsers()
@@ -191,7 +181,7 @@ namespace TaxCrud
 
             Console.WriteLine($"This change will affect user {person.Name}. Continue?");
 
-            var yesOrNo = new EasyConsole.Menu()
+            var yesOrNo = new Menu()
                 .Add($"Yes, update {person.Name}'s name to {fname} {lname}", () =>
                 {
                     Connection.UpdateName(person.Id, fname, lname);
@@ -211,7 +201,7 @@ namespace TaxCrud
 
             Console.WriteLine($"This will delete the user {person.Name}. Continue?");
 
-            var yesOrNo = new EasyConsole.Menu()
+            var yesOrNo = new Menu()
                 .Add($"Yes, delete {person.Name} permanently", () =>
                 {
                     Connection.DeleteUser(person.Id);
@@ -266,7 +256,7 @@ namespace TaxCrud
         {
             Console.WriteLine("This will wipe all data, including users and financial transactions. Are you sure?");
 
-            var yesOrNo = new EasyConsole.Menu()
+            var yesOrNo = new Menu()
                 .Add("Yes, delete everything", () =>
                 {
                     Connection.ResetDatabase();
