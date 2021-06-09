@@ -1,3 +1,4 @@
+using FluentAssertions;
 using System.Linq;
 using TaxCrud;
 using Xunit;
@@ -21,9 +22,7 @@ namespace TaxCrudTests
         public void AddUser_CorrectlyAddsUser_WhenGivenOneInput()
         {
             Connection.AddUser("John", "Smith");
-            var results = Connection.GetAllUsers();
-
-            Assert.Equal("John Smith", results.Single().Name);
+            Connection.GetAllUsers().Should().HaveCount(1, "because one user was added");
         }
 
         [Fact]
@@ -31,9 +30,8 @@ namespace TaxCrudTests
         {
             Connection.AddUser("John", "Smith");
             Connection.AddUser("Jane", "Smith");
-            var results = Connection.GetAllUsers();
 
-            Assert.Equal(2, results.Count());
+            Connection.GetAllUsers().Should().HaveCount(2, "because two users were added");
         }
 
         [Fact]
@@ -45,7 +43,7 @@ namespace TaxCrudTests
 
             Connection.DeleteUser(john.Id);
 
-            Assert.Empty(Connection.GetAllUsers());
+            Connection.GetAllUsers().Should().BeEmpty("because the only user has been deleted");
         }
 
         [Fact]
@@ -58,7 +56,7 @@ namespace TaxCrudTests
             Connection.ResetDatabase();
 
             // assert
-            Assert.Empty(Connection.GetAllUsers());
+            Connection.GetAllUsers().Should().BeEmpty("because resetting a database removes all users");
         }
 
         [Fact]
@@ -73,7 +71,7 @@ namespace TaxCrudTests
             Connection.ResetDatabase();
 
             // assert
-            Assert.Empty(Connection.GetAllUsers());
+            Connection.GetAllUsers().Should().BeEmpty("because resetting a database removes all users");
         }
 
 
@@ -98,8 +96,9 @@ namespace TaxCrudTests
         [Fact]
         public void GetById_ReturnsInvalidPerson_WhenIdIsInvalid()
         {
+            Connection.AddUser("John", "Smith");
             var actual = Connection.GetByID(int.MaxValue);
-            Assert.True(actual is InvalidPerson);
+            actual.Should().BeOfType<InvalidPerson>("because requests for invalid IDs return InvalidPerson objects");
         }
 
 
@@ -113,7 +112,7 @@ namespace TaxCrudTests
             Connection.UpdateName(1, "John", "Evans"); // he got married and took his partner's name
 
             // assert
-            Assert.Equal("John Evans", Connection.GetByID(1).Name);
+            Connection.GetByID(1).Name.Should().Be("John Evans", "because names should be updated when a valid ID is given");
         }
 
         [Fact]
@@ -126,7 +125,7 @@ namespace TaxCrudTests
             Connection.UpdateName(2, "John", "Evans");
 
             // assert
-            Assert.Equal("John Smith", Connection.GetByID(1).Name);
+            Connection.GetByID(1).Name.Should().Be("John Smith", "because names should not be updated when an invalid ID is given");
         }
 
 
@@ -142,9 +141,8 @@ namespace TaxCrudTests
             var person = Connection.GetByID(1);
 
             // assert
-            Assert.Equal(32.3m, person.Balance);
+            person.Balance.Should().Be(32.3m, "otherwise a user's transactions are not being retrieved or summed correctly");
         }
-
 
         [Fact]
         public void GetTransactions_ReturnsCorrectValues_WhenGivenValidID()
@@ -158,7 +156,7 @@ namespace TaxCrudTests
             var transactions = Connection.GetTransactions(1);
 
             // assert
-            Assert.Equal(32.3m, transactions.Sum(x => x.Amount));
+            transactions.Sum(x => x.Amount).Should().Be(32.3m, "otherwise a user's transactions are not being retrieved or summed correctly");
         }
 
 
@@ -174,7 +172,7 @@ namespace TaxCrudTests
             var person = Connection.GetByID(1);
 
             // assert
-            Assert.Equal(32.25m, person.Balance);
+            person.Balance.Should().Be(32.25m, "because transactions should round up");
         }
     }
 }
