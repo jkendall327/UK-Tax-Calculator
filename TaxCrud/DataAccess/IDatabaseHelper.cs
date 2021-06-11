@@ -11,6 +11,13 @@ namespace TaxCrud
         void DeleteUser(int id);
         IEnumerable<Person> GetAllUsers();
         Person GetByID(int result);
+
+        /// <summary>
+        /// Fuzzy search for users by name.
+        /// </summary>
+        /// <param name="firstName">Search term's first name.</param>
+        /// <param name="lastName">Search term's first name.</param>
+        /// <returns>An <see cref="IEnumerable{T}"/> of potential matches.</returns>
         IEnumerable<Person> GetByName(string firstName, string lastName);
         IEnumerable<Transaction> GetTransactions(int id);
         void Initialize();

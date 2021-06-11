@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using Spectre.Console;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -26,7 +27,7 @@ namespace TaxCrud
             var fname = Input.ReadString("Input first name: ");
             var lname = Input.ReadString("Input last name: ");
 
-            var results = Connection.GetByName(fname, lname);
+            var results = Connection.GetByName(fname, lname).ToList();
 
             if (!results.Any())
             {
@@ -35,12 +36,20 @@ namespace TaxCrud
                 Program.NavigateBack();
             }
 
-            Console.WriteLine($"{results.Count()} users found.");
+            Console.WriteLine($"{results.Count()} potential results found.");
+
+            var table = Person.GetEmptyTable();
 
             foreach (var person in results)
             {
-                Console.WriteLine(person.ToString());
+                table.AddRow(person.TableData);
             }
+
+            AnsiConsole.Render(table);
+
+            Console.WriteLine("Hit [Enter] to return.");
+            Console.ReadLine();
+            Program.NavigateBack();
         }
     }
 }

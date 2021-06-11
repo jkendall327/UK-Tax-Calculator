@@ -1,5 +1,6 @@
 ﻿using Dapper;
 using EasyConsole;
+using FuzzySharp;
 using Microsoft.Data.Sqlite;
 using System;
 using System.Collections.Generic;
@@ -69,7 +70,9 @@ namespace TaxCrud
 
         public IEnumerable<Person> GetByName(string firstName, string lastName)
         {
-            return Connection.Query<Person>($"{GetUserDetails} WHERE FirstName = @fname AND LastName = @lname", new { fname = firstName, lname = lastName });
+            // lowercase all user names + search term then feed into Fuzz.Ratio
+            var normalisedSearchTerm = firstName.ToLower() + " " + lastName.ToLower();
+            return GetAllUsers().Where(x => Fuzz.Ratio(x.Name.ToLower(), normalisedSearchTerm) > 70);
         }
 
         public void DeleteUser(int id)
