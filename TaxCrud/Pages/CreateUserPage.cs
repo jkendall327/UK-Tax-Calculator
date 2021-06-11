@@ -46,6 +46,7 @@ namespace TaxCrud
                 Console.WriteLine($"New user {firstName} {lastName} added succesfully.");
             }
 
+            Console.ReadLine();
             Program.NavigateTo<ViewUsersPage>();
         }
     }

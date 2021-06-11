@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using Humanizer;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -28,16 +29,16 @@ namespace TaxCrud
 
             var results = Connection.GetByName(fname, lname).ToList();
 
-            if (!results.Any())
+            var resultWord = "potential match"
+                .ToQuantity(results.Count, ShowQuantityAs.Words)
+                .Transform(To.SentenceCase);
+
+            Console.WriteLine($"{resultWord} found.");
+
+            if (results.Any())
             {
-                Console.WriteLine("No users by that name found.");
-                Console.ReadLine();
-                Program.NavigateBack();
+                results.PrintToTable();
             }
-
-            Console.WriteLine($"{results.Count()} potential results found.");
-
-            results.PrintToTable();
 
             Console.WriteLine("Hit [Enter] to return.");
             Console.ReadLine();

@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using Humanizer;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -25,13 +26,15 @@ namespace TaxCrud
 
             var queryResult = Connection.GetAllUsers();
 
+            var resultWord = "user"
+                .ToQuantity(queryResult.Count(), ShowQuantityAs.Words)
+                .Transform(To.SentenceCase);
+
+            Console.WriteLine($"{resultWord} found.");
+
             if (queryResult.Any())
             {
                 queryResult.PrintToTable();
-            }
-            else
-            {
-                Console.WriteLine("No users!");
             }
 
             Console.WriteLine("Hit [Enter] to return.");
