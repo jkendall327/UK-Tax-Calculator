@@ -45,13 +45,20 @@ namespace TaxCrud
                 .AddColumn("Current balance")
                 .AddColumn("Outstanding tax (past year)");
 
+            table.Title = new("Users", new Style(foreground: null, background: Color.Grey, decoration: Decoration.Bold));
+            table.Border(TableBorder.Rounded);
+
             foreach (var person in people)
             {
-                table.AddRow(new string[] {
-                    person.Id.ToString(),
-                    person.Name,
-                    person.Balance.ToMoney(),
-                    person.TaxOverLastYear().ToMoney() });
+                Style balanceStyle = person.Balance > 0 ? new Style(Color.Green) : new Style(Color.Red);
+                Style taxStyle = person.TaxOverLastYear() > 0 ? new Style(Color.Red) : new Style(Color.Green);
+
+                table.AddRow(
+                    new Markup(person.Id.ToString()),
+                    new Markup(person.Name),
+                    new Markup(person.Balance.ToMoney(), balanceStyle),
+                    new Markup(person.TaxOverLastYear().ToMoney(), taxStyle)
+                    );
             }
 
             AnsiConsole.Render(table);
