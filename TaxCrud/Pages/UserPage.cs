@@ -1,6 +1,7 @@
 ﻿using EasyConsole;
 using Spectre.Console;
 using System;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 [assembly: InternalsVisibleTo("TaxCrudTests")]
@@ -46,7 +47,8 @@ namespace TaxCrud
             new Menu()
                 .Add($"Go back", () => Program.NavigateBack())
                 .Add("Add transaction", AddTransaction)
-                .Add("Edit user", Edit)
+                .Add("Edit name", EditName)
+                .Add("Edit biography", EditBiography)
                 .Add("Delete user", Delete)
             .Display();
 
@@ -74,7 +76,7 @@ namespace TaxCrud
             AnsiConsole.Render(transactions);
         }
 
-        private void Edit()
+        private void EditName()
         {
             Console.WriteLine($"Provide new name for {Person.Name}.");
             var fname = Input.ReadString("Input first name: ");
@@ -92,10 +94,34 @@ namespace TaxCrud
             .Display();
         }
 
+        public void EditBiography()
+        {
+            var questions = new Dictionary<string, Action<Person>>();
+
+            questions.Add("Do you claim Blind Person's Allowance?",
+                (x) => x.HasBlindPersonAllowance = true);
+
+            questions.Add("Do you claim Marriage Allowance?",
+                (x) => x.HasMarriageAllowance = true);
+
+            foreach (var option in questions)
+            {
+                Console.WriteLine(option.Key);
+
+                new Menu()
+                .Add("Yes", () => option.Value(Person))
+                .Add("No", () => { })
+                .Display();
+            }
+
+            Console.WriteLine("Results:" + Person.HasBlindPersonAllowance + " " + Person.HasMarriageAllowance);
+            Console.ReadLine();
+            Program.NavigateHome();
+        }
+
         private void Delete()
         {
-            AnsiConsole.Render(new Markup($"This will [bold red]permanently delete[/] the user { Person.Name }. Continue?"));
-            Console.WriteLine(Environment.NewLine);
+            Console.WriteLine($"This will delete the user {Person.Name}. Continue?");
 
             new Menu()
                 .Add($"Yes, delete {Person.Name} permanently", () =>
