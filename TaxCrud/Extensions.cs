@@ -17,6 +17,17 @@ namespace TaxCrud
             return value.Length <= maxLength ? value : value.Substring(0, maxLength);
         }
 
+        /// <summary>
+        /// Format a <see cref="decimal"/> as a monetary value.
+        /// </summary>
+        /// <param name="value"></param>
+        /// <returns>The formatted string.</returns>
+        public static string ToMoney(this decimal value) => value.ToString("#,##0.00");
+
+        /// <summary>
+        /// Format a <see cref="Person"/> object into an <see cref="AnsiConsole"/> table.
+        /// </summary>
+        /// <param name="person">The person to list in a table.</param>
         public static void PrintToTable(this Person person)
         {
             PrintToTable(new List<Person>() { person });
@@ -39,8 +50,8 @@ namespace TaxCrud
                 table.AddRow(new string[] {
                     person.Id.ToString(),
                     person.Name,
-                    person.Balance.ToString("#,##0.00"),
-                    person.TaxOverLastYear().ToString("#,##0.00") });
+                    person.Balance.ToMoney(),
+                    person.TaxOverLastYear().ToMoney() });
             }
 
             AnsiConsole.Render(table);
