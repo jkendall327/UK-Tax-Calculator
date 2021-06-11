@@ -16,5 +16,11 @@ namespace TaxCrud
         void Initialize();
         void ResetDatabase();
         void UpdateName(int id, string firstName, string lastName);
+
+        /// <summary>
+        /// Parses user's input to see if it's a valid <see cref="Person.Id"/>.
+        /// </summary>
+        /// <returns>A <see cref="Person"/> if ID is valid; otherwise an <see cref="InvalidPerson"/> representing failure.</returns>
+        Person GetPerson();
     }
 }

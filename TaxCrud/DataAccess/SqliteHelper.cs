@@ -1,5 +1,7 @@
 ﻿using Dapper;
+using EasyConsole;
 using Microsoft.Data.Sqlite;
+using System;
 using System.Collections.Generic;
 using System.Data.Common;
 using System.Linq;
@@ -31,6 +33,22 @@ namespace TaxCrud
         }
 
         internal const string GetUserDetails = "SELECT [Id], [FirstName],[LastName] FROM [Users]";
+
+        public Person GetPerson()
+        {
+            // TODO: get the highest ID in the database here?
+            var desiredID = Input.ReadInt(1, int.MaxValue);
+
+            var person = GetByID(desiredID);
+
+            if (person is InvalidPerson)
+            {
+                Console.WriteLine($"No user with ID {desiredID} found. Returning.");
+                Console.ReadLine();
+            }
+
+            return person;
+        }
 
         public void AddUser(string firstName, string lastName)
         {
