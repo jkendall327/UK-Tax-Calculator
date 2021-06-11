@@ -52,5 +52,43 @@ namespace TaxCrudTests
             // assert
             taxToPay.Should().Be(0, "because total income was negative");
         }
+
+
+        [Fact]
+        public void CalculateTax_SHouldHaveHigherPersonalAllowance_WhenPersonIsBlind()
+        {
+            // arrange
+            var sut = new Person() { HasBlindPersonAllowance = true };
+            sut.Transactions.Add(new Transaction() { Amount = 400_000_000, Timestamp = DateTime.Today });
+
+            var comparison = new Person() { HasBlindPersonAllowance = false };
+            comparison.Transactions.Add(new Transaction() { Amount = 400_000_000, Timestamp = DateTime.Today });
+
+            // act
+            var withoutAllowance = Tax.Calculate(comparison, TimeSpan.FromDays(360), DateTime.Now);
+            var withAllowance = Tax.Calculate(sut, TimeSpan.FromDays(360), DateTime.Now);
+
+            // assert
+            withAllowance.Should().BeLessThan(withoutAllowance);
+        }
+
+        [Fact]
+        public void CalculateTax_SHouldHaveHigherPersonalAllowance_WhenPersonHasMarriageAllowance()
+        {
+            // arrange
+            var sut = new Person() { HasMarriageAllowance = true };
+            sut.Transactions.Add(new Transaction() { Amount = 400_000_000, Timestamp = DateTime.Today });
+
+            var comparison = new Person() { HasMarriageAllowance = false };
+            comparison.Transactions.Add(new Transaction() { Amount = 400_000_000, Timestamp = DateTime.Today });
+
+            // act
+            var withoutAllowance = Tax.Calculate(comparison, TimeSpan.FromDays(360), DateTime.Now);
+            var withAllowance = Tax.Calculate(sut, TimeSpan.FromDays(360), DateTime.Now);
+
+            // assert
+            withAllowance.Should().BeLessThan(withoutAllowance);
+
+        }
     }
 }

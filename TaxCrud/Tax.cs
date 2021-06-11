@@ -26,7 +26,7 @@ namespace TaxCrud
 
             if (totalIncome <= 0) return decimal.Zero;
 
-            decimal personalAllowance = CalculatePersonalAllowance(totalIncome);
+            decimal personalAllowance = GetPersonalAllowance(person, totalIncome);
 
             var taxableIncome = totalIncome - personalAllowance;
             if (taxableIncome <= 0) return decimal.Zero;
@@ -49,10 +49,21 @@ namespace TaxCrud
             return totalTax;
         }
 
-        private static decimal CalculatePersonalAllowance(decimal totalIncome)
+        private static decimal GetPersonalAllowance(Person person, decimal totalIncome)
         {
             // todo: this differs if you make over a certain amount or claim Marriage Allowance or Blind Person’s Allowance
-            return 12570m;
+            var basic = 12_570m;
+
+            if (person.HasBlindPersonAllowance)
+            {
+                basic += 2_520;
+            }
+            if (person.HasMarriageAllowance)
+            {
+                basic += 1_260;
+            }
+
+            return basic;
         }
     }
 }
