@@ -94,7 +94,8 @@ namespace TaxCrud
 
         private void Delete()
         {
-            Console.WriteLine($"This will delete the user {Person.Name}. Continue?");
+            AnsiConsole.Render(new Markup($"This will [bold red]permanently delete[/] the user { Person.Name }. Continue?"));
+            Console.WriteLine(Environment.NewLine);
 
             new Menu()
                 .Add($"Yes, delete {Person.Name} permanently", () =>

@@ -1,4 +1,5 @@
 ﻿using EasyConsole;
+using Spectre.Console;
 using System;
 using System.Runtime.CompilerServices;
 
@@ -22,7 +23,8 @@ namespace TaxCrud
         {
             base.Display();
 
-            Console.WriteLine("This will wipe all data, including users and financial transactions. Are you sure?");
+            AnsiConsole.Render(new Markup("This will [bold red]wipe everything from the database[/], including users and financial transactions. Are you [bold red]sure[/]?"));
+            Console.WriteLine(Environment.NewLine);
 
             var yesOrNo = new Menu()
                 .Add("Yes, delete everything", () =>
