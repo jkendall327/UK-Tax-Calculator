@@ -1,5 +1,4 @@
 ﻿using EasyConsole;
-using Spectre.Console;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -38,14 +37,7 @@ namespace TaxCrud
 
             Console.WriteLine($"{results.Count()} potential results found.");
 
-            var table = Person.GetEmptyTable();
-
-            foreach (var person in results)
-            {
-                table.AddRow(person.TableData);
-            }
-
-            AnsiConsole.Render(table);
+            results.PrintToTable();
 
             Console.WriteLine("Hit [Enter] to return.");
             Console.ReadLine();

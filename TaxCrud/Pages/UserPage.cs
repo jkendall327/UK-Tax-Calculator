@@ -38,8 +38,7 @@ namespace TaxCrud
             // update record
             Person = Connection.GetByID(Person.Id);
 
-            var table = Person.GetEmptyTable().AddRow(Person.TableData);
-            AnsiConsole.Render(table);
+            Person.PrintToTable();
 
             // only print transactions table if there's some to print
             if (!Person.Transactions.IsEmpty()) PrintTransactions(5);

@@ -1,5 +1,4 @@
-﻿using Spectre.Console;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -23,20 +22,6 @@ namespace TaxCrud
         public override string ToString() => $"[{Id}] {FirstName} {LastName}";
 
         internal decimal TaxOverLastYear() => CalculateTax(TimeSpan.FromDays(360), DateTime.Now);
-
-        public static Table GetEmptyTable()
-        {
-            return new Table()
-                .AddColumn("Id")
-                .AddColumn("Name")
-                .AddColumn("Current balance")
-                .AddColumn("Outstanding tax (past year)");
-        }
-
-        /// <summary>
-        /// Person's info formatted into array for printing in tables.
-        /// </summary>
-        public string[] TableData => new string[] { Id.ToString(), Name, Balance.ToString("#,##0.00"), TaxOverLastYear().ToString("#,##0.00") };
 
         /// <summary>
         /// Calculates the tax a user in the UK should pay for income earned during a given timespan.

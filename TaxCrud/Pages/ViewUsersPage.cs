@@ -1,5 +1,4 @@
 ﻿using EasyConsole;
-using Spectre.Console;
 using System;
 using System.Linq;
 using System.Runtime.CompilerServices;
@@ -28,22 +27,15 @@ namespace TaxCrud
 
             if (queryResult.Any())
             {
-                var table = Person.GetEmptyTable();
-
-                foreach (var person in queryResult)
-                {
-                    table.AddRow(person.TableData);
-                }
-
-                AnsiConsole.Render(table);
+                queryResult.PrintToTable();
             }
             else
             {
                 Console.WriteLine("No users!");
             }
 
+            Console.WriteLine("Hit [Enter] to return.");
             Console.ReadLine();
-
             Program.NavigateHome();
         }
     }
