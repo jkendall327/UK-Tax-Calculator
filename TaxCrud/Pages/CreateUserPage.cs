@@ -28,6 +28,7 @@ namespace TaxCrud
             if (firstName.Length > 20 || lastName.Length > 20)
             {
                 Console.WriteLine("Name is too long and will be truncated.");
+                Console.WriteLine("Preview: " + firstName.Truncate(20) + " " + lastName.Truncate(20));
 
                 var continuePrompt = new Menu()
                     .Add($"Continue", () =>
