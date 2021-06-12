@@ -14,9 +14,11 @@ namespace TaxCrud
 
     internal class App : Program
     {
-        public App() : base(title: "Tax Simulator 2021", breadcrumbHeader: true)
+        public App() : base(title: "Tax Calculator", breadcrumbHeader: true)
         {
             var connection = new SqliteHelper();
+
+            connection.Initialize();
 
             AddPage(new MainPage(this));
             AddPage(new UserPage(this, connection));
