@@ -1,4 +1,4 @@
-![Simple UK tax calculator](TaxCrud\Image.png)
+![Simple UK tax calculator](TaxCrud/Image.png)
 
 This is a simple .NET 5 console app where UK sole traders (self-employed workers) can log monetary transactions and calculate the income tax they owe to the government. 
 I started this project so I could get some practical experience of working with databases - and, of course, because I wanted to procrastinate filing my own taxes :)
